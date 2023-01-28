@@ -1,4 +1,8 @@
 package com.example.mypokedex.pokemon.data
 
-interface pokemonRepository {
+interface PokemonRepository {
+    fun getPokemon(name: String): Pokemon
+    fun getListOfPokemons(): List<String>
 }
+
+

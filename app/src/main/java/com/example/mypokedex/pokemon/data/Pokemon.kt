@@ -7,7 +7,7 @@ data class Pokemon(
     val abilities: List<String>,
     val genderRatio: Float,
     val catchRate: Float,
-    val eggGroup: String
+    val eggGroup: List<String>
 ) {
 }
 
