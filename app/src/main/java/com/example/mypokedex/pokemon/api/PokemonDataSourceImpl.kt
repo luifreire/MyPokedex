@@ -3,6 +3,7 @@ package com.example.mypokedex.pokemon.api
 import android.util.Log
 import com.example.mypokedex.pokemon.data.model.PokemonDetailResponse
 import com.example.mypokedex.pokemon.data.model.PokemonSpeciesAPIResponse
+import com.example.mypokedex.pokemon.data.model.PokemonListResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,6 +46,9 @@ class PokemonDataSourceImpl: PokemonDataSource {
         })
     }
 
+    override fun getPokemonList(completion: (response: PokemonListResponse?) -> Unit) {
+
+    }
     //TODO("Seguir o exemplo do getPokemonDetail, implementando a nova chamada")
 
 }
