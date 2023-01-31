@@ -4,6 +4,7 @@ import com.example.mypokedex.pokemon.api.*
 import com.example.mypokedex.pokemon.data.model.*
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.slot
 import org.junit.Test
 import org.junit.Assert.*
 
@@ -16,9 +17,12 @@ class PokemonRepositoryTest {
         val pokemon = Pokemon("bulbasaur",0f,0f, listOf(""),1f,45f,
             listOf("monster","plant")
         )
-        coEvery { dataSource.getPokemonSpeciesDetail("bulbasaur") } returns mockSpeciesAPIResponse()
-        val returnedPokemon = sut.getPokemon("Bulbasaur")
-        assertEquals(pokemon, returnedPokemon)
+        coEvery { dataSource.getPokemonSpeciesDetail("bulbasaur", any()) } answers {
+            mockSpeciesAPIResponse()
+        }
+        sut.getPokemon("Bulbasaur") {returnedPokemon: Pokemon? ->
+            assertEquals(pokemon, returnedPokemon)
+        }
     }
 
     @Test
