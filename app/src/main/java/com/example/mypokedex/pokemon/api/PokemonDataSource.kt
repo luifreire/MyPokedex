@@ -15,8 +15,7 @@ interface PokemonAPI {
 }
 
 interface PokemonDataSource {
-    //TODO("Saulo – adicionar callback nessa requisição")
-    fun getPokemonSpeciesDetail(species: String): PokemonSpeciesAPIResponse?
+    fun getPokemonSpeciesDetail(species: String, completion: (PokemonSpeciesAPIResponse?) -> Unit)
     fun getPokemonDetail(name: String, completion: (response: PokemonDetailResponse?) -> Unit)
     //TODO("Adicionar método para trazer a resposta da API com a lista de nomes, exatamente como ela vem")
     //TODO("Seguir o exemplo do getPokemonDetail")

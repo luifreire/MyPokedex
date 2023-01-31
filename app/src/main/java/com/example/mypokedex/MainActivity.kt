@@ -3,6 +3,7 @@ package com.example.mypokedex
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.mypokedex.pokemon.api.PokemonDataSourceImpl
+import com.example.mypokedex.pokemon.data.PokemonRepositoryImpl
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        PokemonDataSourceImpl().getPokemonDetail("bulbasaur") { response ->
+        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon("bulbasaur") { response ->
             println(response)
         }
     }

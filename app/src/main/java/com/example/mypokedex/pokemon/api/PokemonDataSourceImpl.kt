@@ -19,8 +19,26 @@ class PokemonDataSourceImpl: PokemonDataSource {
     private val pokeApi = retrofit.create(PokemonAPI::class.java)
 
 
-    override fun getPokemonSpeciesDetail(species: String): PokemonSpeciesAPIResponse? {
-        TODO("Saulo - Precisa ser feito com Callback")
+    override fun getPokemonSpeciesDetail(species: String, completion: (PokemonSpeciesAPIResponse?) -> Unit) {
+        val call: Call<PokemonSpeciesAPIResponse> = pokeApi.species(species)
+        call.enqueue(object: Callback<PokemonSpeciesAPIResponse> {
+            override fun onResponse(
+                call: Call<PokemonSpeciesAPIResponse>,
+                response: Response<PokemonSpeciesAPIResponse>
+            ) {
+                if (response.isSuccessful) {
+                    completion(response.body()!!)
+                } else {
+                    Log.v("retrofit", "failed to fetch pokemon species due to error ${response.errorBody()}")
+                    completion(null)
+                }
+            }
+
+            override fun onFailure(call: Call<PokemonSpeciesAPIResponse>, t: Throwable) {
+                Log.v("retrofit", "failed to fetch pokemon detail due to error: ${t.message}")
+                completion(null)
+            }
+        })
     }
 
     override fun getPokemonDetail(name: String, completion: (response: PokemonDetailResponse?) -> Unit) {
