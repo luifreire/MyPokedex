@@ -13,7 +13,7 @@ interface PokemonAPI {
     @GET("pokemon/{name}")
     fun pokemon(@Path("name") name: String): Call<PokemonDetailResponse>
     @GET("pokemon")
-    fun pokemonList(): Call<Any>
+    fun pokemonList(): Call<PokemonListResponse>
 }
 
 interface PokemonDataSource {

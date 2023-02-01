@@ -13,8 +13,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon("bulbasaur") { response ->
-            println(response)
+//        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon("bulbasaur") { response ->
+//            println(response)
+//        }
+        PokemonRepositoryImpl(PokemonDataSourceImpl()).getListOfPokemons { result ->
+            println(result)
         }
     }
 }

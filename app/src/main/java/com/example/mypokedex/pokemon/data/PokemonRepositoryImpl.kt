@@ -2,6 +2,7 @@ package com.example.mypokedex.pokemon.data
 
 import com.example.mypokedex.pokemon.api.PokemonDataSource
 import com.example.mypokedex.pokemon.data.model.PokemonDetailResponse
+import com.example.mypokedex.pokemon.data.model.PokemonListResponse
 
 class PokemonRepositoryImpl constructor(private val api: PokemonDataSource): PokemonRepository {
     override fun getPokemon(name: String, completion: (pokemon: Pokemon?) -> Unit) {
@@ -35,29 +36,18 @@ class PokemonRepositoryImpl constructor(private val api: PokemonDataSource): Pok
         }
     }
 
-    override fun getListOfPokemons(): List<String> {
-//        try {
-//            val response = api.getPokemonList()!!
-//            return PokemonNames(
-//                response.pokemonName,
-//                response.pokemonName,
-//                response.pokemonName,
-//                response.pokemonName,
-//                response.pokemonName,
-//                response.pokemonName,
-//                response.pokemonName,
-//                response.pokemonName,
-//                response.pokemonName,
-//                response.pokemonName
-//            )
-//        }
-//        catch (e: Exception) {
-//            println("An error happened while fetching from the API: ${e.message}")
-//            return null
-//        }
-        return listOf("")
-        TODO("Chamar método criado no data source para pegar a resposta da API")
-        TODO("Filtrar para ficar só uma lista de nomes como string")
-        TODO("Acrescentar callback nesse método e atualizar o teste")
+    override fun getListOfPokemons(callback: (List<String>?) -> Unit) {
+        try {
+            api.getPokemonList {res: PokemonListResponse? ->
+                res?.let {
+                    var keep = it.results.map { item -> item.name }
+                    callback(keep)
+                }
+            }
+        }
+        catch (e: Exception) {
+            println("An error happened while fetching from the API: ${e.message}")
+            callback(null)
+        }
     }
 }

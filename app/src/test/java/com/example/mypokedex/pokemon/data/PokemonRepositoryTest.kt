@@ -31,7 +31,6 @@ class PokemonRepositoryTest {
         val returnedPokemons = sut.getListOfPokemons()
         assertEquals(pokemons, returnedPokemons)
     }
-
     companion object {
         fun mockSpeciesAPIResponse() = PokemonSpeciesAPIResponse(
             49,
@@ -61,6 +60,12 @@ class PokemonRepositoryTest {
             listOf(PKMNPkDexNumber(3, PKMNMetaData("kanto", ""))),
             PKMNMetaData("", ""),
             listOf(PKMNVariety(true, PKMNMetaData("bulbasaur", "")))
+        )
+        fun mockListAPIResponse() = PokemonListResponse(
+        count=1279,
+        next="https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20",
+        previous=null,
+        results=listOf(PKMNMetaData("Bullbasaur",""), PKMNMetaData("Charizard",""))
         )
     }
 

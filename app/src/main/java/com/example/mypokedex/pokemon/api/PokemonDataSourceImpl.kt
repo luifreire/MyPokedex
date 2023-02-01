@@ -65,7 +65,25 @@ class PokemonDataSourceImpl: PokemonDataSource {
     }
 
     override fun getPokemonList(completion: (response: PokemonListResponse?) -> Unit) {
+        val call: Call<PokemonListResponse> = pokeApi.pokemonList()
+        call.enqueue(object: Callback<PokemonListResponse> {
+            override fun onResponse(
+                call: Call<PokemonListResponse>,
+                response: Response<PokemonListResponse>
+            ) {
+                if (response.isSuccessful) {
+                    completion(response.body()!!)
+                } else {
+                    Log.v("retrofit", "failed to fetch pokemon list due to error ${response.errorBody()}")
+                    completion(null)
+                }
+            }
 
+            override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
+                Log.v("retrofit", "failed to fetch pokemon detail due to error: ${t.message}")
+                completion(null)
+            }
+        })
     }
     //TODO("Seguir o exemplo do getPokemonDetail, implementando a nova chamada")
 
