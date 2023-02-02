@@ -28,8 +28,12 @@ class PokemonRepositoryTest {
     @Test
     fun testGetListOfPokemons() {
         val pokemons = listOf("Bulbasaur","Eve","Pikachu","Charizard","MewTwo","Pichu")
-        val returnedPokemons = sut.getListOfPokemons()
-        assertEquals(pokemons, returnedPokemons)
+        coEvery { dataSource.getPokemonList(any())} answers {
+            mockListAPIResponse()
+        }
+        sut.getListOfPokemons { pokeListResult ->
+            assertEquals(pokemons, pokeListResult)
+        }
     }
     companion object {
         fun mockSpeciesAPIResponse() = PokemonSpeciesAPIResponse(
