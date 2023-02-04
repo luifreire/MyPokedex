@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation "androidx.activity:activity-ktx:+"
     implementation "androidx.fragment:fragment-ktx:+"
+    implementation 'androidx.core:core-ktx:+'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.mockk:mockk:1.12.4"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
