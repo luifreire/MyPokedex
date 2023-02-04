@@ -34,8 +34,8 @@ class PokemonDetailFragment: Fragment() {
             var maleRatio = 1 - femaleRatio
             var formattedFemaleRatio = femaleRatio * 100
             var formattedMaleRatio = maleRatio * 100
-            binding.tvGender.text = formattedFemaleRatio.toString()+"%"
-            binding.tvGender2.text = formattedMaleRatio.toString()+"%"
+            binding.tvGender.text = "${formattedFemaleRatio.toString()}%"
+            binding.tvGender2.text = "${formattedMaleRatio.toString()}%"
             }
         }
     }
