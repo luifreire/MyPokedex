@@ -21,9 +21,10 @@ class PokemonDetailFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon("bulbassaur") {
+        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon("bulbasaur") {
             it?.let {pokemon ->
             binding.tvPokemonName.text = pokemon.name.capitalize()
+            binding.tvSpecies.text = pokemon.species.capitalize()
             binding.tvHeight.text = pokemon.height.toString()
             binding.tvWeight.text = pokemon.weight.toString()
             binding.tvAbilities.text = pokemon.abilities.map { ability -> ability.capitalize()  }.joinToString(", ")

@@ -15,6 +15,7 @@ class PokemonRepositoryImpl constructor(private val api: PokemonDataSource): Pok
                         speciesResponse?.let {
                             var poke = Pokemon(
                                 pokeResponse.name,
+                                pokeResponse.species.name,
                                 pokeResponse.height.toFloat(),
                                 pokeResponse.weight.toFloat(),
                                 pokeResponse.abilities.map { ability -> ability.ability.name },
