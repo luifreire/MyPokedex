@@ -23,18 +23,18 @@ class PokemonDetailFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon("bulbasaur") {
             it?.let {pokemon ->
-            binding.tvPokemonName.text = pokemon.name.capitalize()
-            binding.tvSpecies.text = pokemon.species.capitalize()
-            binding.tvHeight.text = pokemon.height.toString()
-            binding.tvWeight.text = pokemon.weight.toString()
-            binding.tvAbilities.text = pokemon.abilities.map { ability -> ability.capitalize()  }.joinToString(", ")
-            binding.tvEggGroup.text = pokemon.eggGroup.map { eggGroup -> eggGroup.capitalize() }.joinToString(", ")
-            binding.tvCatchRate.text = pokemon.catchRate.toString()
-
             var femaleRatio = pokemon.genderRatio / 8
             var maleRatio = 1 - femaleRatio
             var formattedFemaleRatio = femaleRatio * 100
             var formattedMaleRatio = maleRatio * 100
+
+            binding.tvPokemonName.text = pokemon.name.capitalize()
+            binding.tvSpecies.text = pokemon.species.capitalize()
+            binding.tvHeight.text = (pokemon.height / 10).toString()
+            binding.tvWeight.text = (pokemon.weight / 10).toString()
+            binding.tvAbilities.text = pokemon.abilities.map { ability -> ability.capitalize()  }.joinToString(", ")
+            binding.tvEggGroup.text = pokemon.eggGroup.map { eggGroup -> eggGroup.capitalize() }.joinToString(", ")
+            binding.tvCatchRate.text = pokemon.catchRate.toString()
             binding.tvGender.text = "${formattedFemaleRatio.toString()}%"
             binding.tvGender2.text = "${formattedMaleRatio.toString()}%"
             }
