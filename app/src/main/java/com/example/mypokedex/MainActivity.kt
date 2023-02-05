@@ -13,14 +13,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.pkmn_host)
-        if (savedInstanceState == null) {
-            val fragment = PokemonDetailFragment()
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.pkmn_content, fragment)
-                .commit()
-        }
+        setContentView(R.layout.activity_main)
+//        if (savedInstanceState == null) {
+//            val fragment = PokemonDetailFragment()
+//            supportFragmentManager
+//                .beginTransaction()
+//                .add(R.id.pkmn_content, fragment)
+//                .commit()
+//        }
     //    binding = ActivityMainBinding.inflate(layoutInflater)
     //    setContentView(binding.root)
     //    val adapter = PokedexListAdapter(listOf(""))
