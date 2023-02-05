@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="50dp"
+    android:paddingTop="4dp">
 
     <TextView
         android:id="@+id/numberidtv"
@@ -12,6 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="No."
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,6 +24,7 @@
         android:layout_marginStart="46dp"
         android:layout_marginTop="8dp"
         android:text="0000"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,6 +35,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/numbertv"
         app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nametv"
+        android:layout_marginTop="8dp"
+        app:dividerColor="@color/cardview_shadow_end_color"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
