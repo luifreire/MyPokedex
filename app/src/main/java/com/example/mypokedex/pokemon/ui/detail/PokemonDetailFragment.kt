@@ -31,7 +31,12 @@ class PokemonDetailFragment: Fragment() {
                 var formattedMaleRatio = maleRatio * 100
 
                 binding.tvPokemonName.text = pokemon.name.capitalize()
-                binding.llImageBackground.setBackgroundColor(Color.parseColor(pokemon.color))
+                var pokeBackgroundColor = Color.parseColor(pokemon.color)
+                var newColor = Color.HSVToColor(FloatArray(3).apply {
+                    Color.colorToHSV(pokeBackgroundColor, this)
+                    this[1] = this[1] * 0.35f
+                })
+                binding.llImageBackground.setBackgroundColor(newColor)
                 val pokeImageUrl = pokemon.imageUrl
                 if (pokeImageUrl.isNotEmpty()) {
                     Glide.with(this).load(pokemon.imageUrl).into(binding.ivPokemonImage)
