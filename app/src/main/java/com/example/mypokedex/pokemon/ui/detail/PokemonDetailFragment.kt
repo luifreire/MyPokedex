@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.mypokedex.databinding.FragmentDetailUiBinding
 import com.example.mypokedex.pokemon.api.PokemonDataSourceImpl
 import com.example.mypokedex.pokemon.data.PokemonRepositoryImpl
@@ -29,6 +30,10 @@ class PokemonDetailFragment: Fragment() {
                 var formattedMaleRatio = maleRatio * 100
 
                 binding.tvPokemonName.text = pokemon.name.capitalize()
+                val pokeImageUrl = pokemon.imageUrl
+                if (pokeImageUrl.isNotEmpty()) {
+                    Glide.with(this).load(pokemon.imageUrl).into(binding.ivPokemonImage)
+                }
                 binding.tvDexQuote.text = pokemon.quote.replace("\n"," ")
                 binding.tvSpecies.text = pokemon.species.capitalize()
                 binding.tvHeight.text = "${(pokemon.height / 10).toString()} m"
