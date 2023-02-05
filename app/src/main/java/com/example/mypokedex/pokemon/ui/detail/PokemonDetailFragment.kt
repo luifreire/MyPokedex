@@ -1,5 +1,6 @@
 package com.example.mypokedex.pokemon.ui.detail
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,7 @@ class PokemonDetailFragment: Fragment() {
                 var formattedMaleRatio = maleRatio * 100
 
                 binding.tvPokemonName.text = pokemon.name.capitalize()
+                binding.llImageBackground.setBackgroundColor(Color.MAGENTA)
                 val pokeImageUrl = pokemon.imageUrl
                 if (pokeImageUrl.isNotEmpty()) {
                     Glide.with(this).load(pokemon.imageUrl).into(binding.ivPokemonImage)

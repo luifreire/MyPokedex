@@ -2,6 +2,7 @@ package com.example.mypokedex.pokemon.data
 
 data class Pokemon(
     val name: String,
+    val color: String,
     val imageUrl: String,
     val quote: String,
     val species: String,
