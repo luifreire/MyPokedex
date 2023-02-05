@@ -29,7 +29,7 @@ class PokemonDetailFragment: Fragment() {
                 var formattedMaleRatio = maleRatio * 100
 
                 binding.tvPokemonName.text = pokemon.name.capitalize()
-                binding.tvDexQuote.text = pokemon.quote
+                binding.tvDexQuote.text = pokemon.quote.replace("\n"," ")
                 binding.tvSpecies.text = pokemon.species.capitalize()
                 binding.tvHeight.text = "${(pokemon.height / 10).toString()} m"
                 binding.tvWeight.text = "${(pokemon.weight / 10).toString()} kg"
