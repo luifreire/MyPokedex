@@ -32,7 +32,7 @@ class PokemonDetailFragment: Fragment() {
 
                 binding.tvPokemonName.text = pokemon.name.capitalize()
                 var pokeBackgroundColor = Color.parseColor(pokemon.color)
-                var acceptedColors = listOf<String>("BLACK", "BLUE", "CYAN", "DARK GRAY", "GRAY GREEN", "LIGHT GRAY", "MAGENTA", "RED", "TRANSPARENT", "WHITE", "YELLOW")
+                var acceptedColors = listOf<String>("black", "blue", "cyan", "dark gray", "gray", "green", "light gray", "magenta", "red", "transparent", "white", "yellow")
                     if (!acceptedColors.contains(pokemon.color)) {
                         pokeBackgroundColor = Color.BLACK
                     }
