@@ -31,11 +31,14 @@ class PokemonDetailFragment: Fragment() {
                 var formattedMaleRatio = maleRatio * 100
 
                 binding.tvPokemonName.text = pokemon.name.capitalize()
-                var pokeBackgroundColor = Color.parseColor(pokemon.color)
+                var pokeBackgroundColor = 0
                 var acceptedColors = listOf<String>("black", "blue", "cyan", "dark gray", "gray", "green", "light gray", "magenta", "red", "transparent", "white", "yellow")
                     if (!acceptedColors.contains(pokemon.color)) {
                         pokeBackgroundColor = Color.BLACK
+                    } else {
+                        pokeBackgroundColor = Color.parseColor(pokemon.color)
                     }
+                
                 var newColor = Color.HSVToColor(FloatArray(3).apply {
                     Color.colorToHSV(pokeBackgroundColor, this)
                     this[1] = this[1] * 0.35f
