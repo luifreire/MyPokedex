@@ -88,13 +88,13 @@ class PokemonDetailFragment: Fragment() {
     }
     private fun checkWeaknesses(pokemon: Pokemon): List<String>? {
         val pokeType1 = pokemon.types[0].type.name
-        val typeOneWeaknesses = typesToWeaknesses[pokeType1]
+        val typeOneWeaknesses = typesToWeaknesses[pokeType1.capitalize()]
         if (pokemon.types.size > 1) {
             val pokeType2 = pokemon.types[1].type.name
-            val typeTwoWeaknesses = typesToWeaknesses[pokeType2]
+            val typeTwoWeaknesses = typesToWeaknesses[pokeType2.capitalize()]
             if(typeOneWeaknesses != null && typeTwoWeaknesses != null) {
                 var joinedTypes: List<String> = typeOneWeaknesses.plus(typeTwoWeaknesses)
-                return joinedTypes.mapNotNull { weakness -> if (weakness == pokeType2) weakness else null}
+                return joinedTypes.mapNotNull { weakness -> if (weakness != pokeType2.capitalize()) weakness else null}
             } else {
                 return null
             }
