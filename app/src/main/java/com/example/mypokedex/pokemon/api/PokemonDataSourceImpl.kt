@@ -43,16 +43,21 @@ class PokemonDataSourceImpl: PokemonDataSource {
     }
 
     override fun getPokemonDetail(name: String, completion: (response: PokemonDetailResponse?) -> Unit) {
-        val call: Call<PokemonDetailResponse> = pokeApi.pokemon(name)
+        var pokeName = name
+        if (name == "deoxys") {
+            pokeName = "deoxys-normal"
+        }
+        val call: Call<PokemonDetailResponse> = pokeApi.pokemon(pokeName)
         call.enqueue(object: Callback<PokemonDetailResponse> {
             override fun onResponse(
                 call: Call<PokemonDetailResponse>,
                 response: Response<PokemonDetailResponse>
             ) {
+                println(response)
                 if (response.isSuccessful) {
                     completion(response.body()!!)
                 } else {
-                    Log.v("retrofit", "failed to fetch pokemon species due to error ${response.errorBody()}")
+                    Log.v("retrofit", "failed to fetch pokemon species due to error ${response.errorBody().toString()}")
                     completion(null)
                 }
             }
