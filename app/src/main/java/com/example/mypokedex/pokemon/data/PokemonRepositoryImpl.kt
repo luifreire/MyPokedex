@@ -24,7 +24,8 @@ class PokemonRepositoryImpl constructor(private val api: PokemonDataSource): Pok
                                 pokeResponse.abilities.map { ability -> ability.ability.name },
                                 it.genderRate.toFloat(),
                                 it.captureRate.toFloat(),
-                                it.eggGroups?.map { group -> group.name } ?: listOf("")
+                                it.eggGroups?.map { group -> group.name } ?: listOf(""),
+                                pokeResponse.types
                             )
                             completion(poke)
                         }
