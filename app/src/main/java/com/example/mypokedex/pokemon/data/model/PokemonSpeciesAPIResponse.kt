@@ -17,7 +17,7 @@ data class PokemonSpeciesAPIResponse (
     @SerializedName("flavor_text_entries")
     val flavorTextEntries: List<PKMNFlavorTextEntry>,
     @SerializedName("form_descriptions")
-    val formDescriptions: List<String>,
+    val formDescriptions: List<FormDescription>,
     @SerializedName("forms_switchable")
     val formsSwitchable: Boolean,
     @SerializedName("gender_rate")
@@ -50,7 +50,7 @@ data class PokemonSpeciesAPIResponse (
 )
 
 data class PokemonSpeciesEggGroup (val name: String, val url: String)
-data class PKMNSpeciesEvolutionChain (val url: String)
+data class  PKMNSpeciesEvolutionChain (val url: String)
 data class PKMNFlavorTextEntry (
     @SerializedName("flavor_text")
     val flavorText: String,
@@ -62,3 +62,5 @@ data class PKMNLocalizableName (val name: String, val language: PKMNMetaData)
 data class PKMNPalParkEncounters (val area: PKMNMetaData, @SerializedName("base_score") val baseScore: Int, val rate: Int)
 data class PKMNPkDexNumber (@SerializedName("entry_number") val entryNumber: Int, val pokedex: PKMNMetaData)
 data class PKMNVariety (@SerializedName("is_default") val isDefault: Boolean, val pokemon: PKMNMetaData)
+
+data class FormDescription (val description: String, val language: PKMNMetaData)
