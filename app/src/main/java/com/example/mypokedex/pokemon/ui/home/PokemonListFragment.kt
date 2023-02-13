@@ -32,6 +32,7 @@ class PokemonListFragment: Fragment() {
                 val adapter = PokedexListAdapter(it1)
                 adapter.onItemClick = pokemonClickCallBack
                 binding.rvPokedexList.layoutManager = LinearLayoutManager(this.context)
+                binding.rvPokedexList.adapter = adapter
             }
         }
     }
