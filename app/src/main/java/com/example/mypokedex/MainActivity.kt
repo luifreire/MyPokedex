@@ -14,32 +14,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        if (savedInstanceState == null) {
-//            val fragment = PokemonDetailFragment()
-//            supportFragmentManager
-//                .beginTransaction()
-//                .add(R.id.pkmn_content, fragment)
-//                .commit()
-//        }
-    //    binding = ActivityMainBinding.inflate(layoutInflater)
-    //    setContentView(binding.root)
-    //    val adapter = PokedexListAdapter(listOf(""))
-    //    binding.rvPokedexList.adapter = adapter
-    //    binding.rvPokedexList.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onResume() {
         super.onResume()
-//        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon("bulbasaur") { response ->
-//            println(response)
-//        }
-//        PokemonRepositoryImpl(PokemonDataSourceImpl()).getListOfPokemons { result ->
-//            println(result)
-//            result?.let {
-//                (binding.rvPokedexList.adapter as PokedexListAdapter).names = it
-//                var adapter = binding.rvPokedexList.adapter
-//                adapter?.notifyDataSetChanged()
-//            }
-//        }
     }
 }
