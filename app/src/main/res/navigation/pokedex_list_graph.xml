@@ -10,6 +10,11 @@
         android:label="pokemon list"
         tools:layout="@layout/fragment_pkmn_list"
         >
+        <action
+            android:id="@+id/navigate_to_pokemon_detail"
+            app:destination="@+id/pokemon_detail"
+            />
+
     </fragment>
 
     <fragment
@@ -18,6 +23,10 @@
         android:label="pokemon detail"
         tools:layout="@layout/fragment_detail_ui"
         >
+        <argument
+            android:name="pokemon_species"
+            app:argType="string"
+            />
     </fragment>
 
 </navigation>
