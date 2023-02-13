@@ -28,7 +28,7 @@ class PokedexListAdapter(var names: List<String>): RecyclerView.Adapter<PokedexL
 
     override fun onBindViewHolder(holder: PokemonListAdapterViewHolder, position: Int) {
         holder.itemView.apply {
-            binding.nametv.text = names[position]
+            binding.nametv.text = names[position].capitalize()
             binding.numbertv.text = (position + 1).toString()
         }
     }
