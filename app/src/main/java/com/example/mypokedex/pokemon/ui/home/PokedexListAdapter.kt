@@ -7,7 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mypokedex.databinding.PokedexListItemBinding
 
 class PokedexListAdapter(var names: List<String>): RecyclerView.Adapter<PokedexListAdapter.PokemonListAdapterViewHolder>(){
-    inner class PokemonListAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+    var onItemClick:((String) -> Unit)? = null
+    inner class PokemonListAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener { onItemClick?.invoke(names[adapterPosition]) }
+        }
+    }
     private lateinit var binding: PokedexListItemBinding
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -23,7 +28,7 @@ class PokedexListAdapter(var names: List<String>): RecyclerView.Adapter<PokedexL
 
     override fun onBindViewHolder(holder: PokemonListAdapterViewHolder, position: Int) {
         holder.itemView.apply {
-            binding.nametv.text = names[position]
+            binding.nametv.text = names[position].capitalize()
             binding.numbertv.text = (position + 1).toString()
         }
     }

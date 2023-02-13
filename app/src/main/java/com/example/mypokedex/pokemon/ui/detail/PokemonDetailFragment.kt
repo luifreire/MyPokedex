@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.mypokedex.databinding.FragmentDetailUiBinding
 import com.example.mypokedex.pokemon.api.PokemonDataSourceImpl
@@ -14,6 +15,7 @@ import com.example.mypokedex.pokemon.data.PokemonRepositoryImpl
 
 class PokemonDetailFragment: Fragment() {
     private lateinit var binding: FragmentDetailUiBinding
+    val args by navArgs<PokemonDetailFragmentArgs>()
     val typesToWeaknesses = mapOf(
         "Normal" to listOf("Fighting"),
         "Fighting" to  listOf("Flying", "Psychic", "Fairy"),
@@ -45,7 +47,7 @@ class PokemonDetailFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon("bulbasaur") {
+        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon(args.pokemonSpecies) {
             it?.let {pokemon ->
                 var femaleRatio = pokemon.genderRatio / 8
                 var maleRatio = 1 - femaleRatio
