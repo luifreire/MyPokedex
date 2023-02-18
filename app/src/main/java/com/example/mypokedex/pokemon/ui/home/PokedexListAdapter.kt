@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypokedex.databinding.PokedexListItemBinding
 
-class PokedexListAdapter(var names: List<String>): RecyclerView.Adapter<PokedexListAdapter.PokemonListAdapterViewHolder>(){
+class PokedexListAdapter(var names: ArrayList<String>): RecyclerView.Adapter<PokedexListAdapter.PokemonListAdapterViewHolder>(){
     var onItemClick:((String) -> Unit)? = null
     inner class PokemonListAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         init {
@@ -36,5 +36,11 @@ class PokedexListAdapter(var names: List<String>): RecyclerView.Adapter<PokedexL
 
     override fun getItemViewType(position: Int): Int {
         return position
+    }
+
+    fun updateData(newList: List<String>) {
+        names.clear()
+        names.addAll(newList)
+        notifyDataSetChanged()
     }
 }
