@@ -45,7 +45,7 @@ class PokemonListFragment: Fragment() {
     }
 
     private fun subscribeUI() {
-        viewModel.names.observe(this, Observer { result ->
+        viewModel.names.observe(this.viewLifecycleOwner, Observer { result ->
             when(result.status) {
                 Result.Status.SUCCESS -> {
                     result.data?.let {
