@@ -1,14 +1,10 @@
 package com.example.mypokedex.pokemon.api
 
-import android.util.Log
-import com.example.mypokedex.pokemon.data.model.PokemonDetailResponse
-import com.example.mypokedex.pokemon.data.model.PokemonSpeciesAPIResponse
-import com.example.mypokedex.pokemon.data.model.PokemonListResponse
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.example.mypokedex.pokemon.data.model.*
+import java.io.IOException
 
 class PokemonDataSourceImpl: PokemonDataSource {
 
@@ -20,76 +16,54 @@ class PokemonDataSourceImpl: PokemonDataSource {
     private val pokeApi = retrofit.create(PokemonAPI::class.java)
 
 
-    override fun getPokemonSpeciesDetail(species: String, completion: (PokemonSpeciesAPIResponse?) -> Unit) {
-        val call: Call<PokemonSpeciesAPIResponse> = pokeApi.species(species)
-        call.enqueue(object: Callback<PokemonSpeciesAPIResponse> {
-            override fun onResponse(
-                call: Call<PokemonSpeciesAPIResponse>,
-                response: Response<PokemonSpeciesAPIResponse>
-            ) {
-                if (response.isSuccessful) {
-                    completion(response.body()!!)
-                } else {
-                    Log.v("retrofit", "failed to fetch pokemon species due to error ${response.errorBody()}")
-                    completion(null)
-                }
-            }
-
-            override fun onFailure(call: Call<PokemonSpeciesAPIResponse>, t: Throwable) {
-                Log.v("retrofit", "failed to fetch pokemon detail due to error: ${t.message}")
-                completion(null)
-            }
-        })
+    override suspend fun getPokemonSpeciesDetail(
+        species: String,
+        completion: suspend (Result<PokemonSpeciesAPIResponse>) -> Unit
+    ) {
+        val response = getResponse({ pokeApi.species(species) }, defaultErrorMessage = "Failed to fetch pokemon species due to error")
+        completion(response)
     }
 
-    override fun getPokemonDetail(name: String, completion: (response: PokemonDetailResponse?) -> Unit) {
+    override suspend fun getPokemonDetail(name: String, completion: suspend (response: Result<PokemonDetailResponse>) -> Unit) {
         var pokeName = name
         if (name == "deoxys") {
             pokeName = "deoxys-normal"
         }
-        val call: Call<PokemonDetailResponse> = pokeApi.pokemon(pokeName)
-        call.enqueue(object: Callback<PokemonDetailResponse> {
-            override fun onResponse(
-                call: Call<PokemonDetailResponse>,
-                response: Response<PokemonDetailResponse>
-            ) {
-                println(response)
-                if (response.isSuccessful) {
-                    completion(response.body()!!)
-                } else {
-                    Log.v("retrofit", "failed to fetch pokemon species due to error ${response.errorBody().toString()}")
-                    completion(null)
-                }
-            }
-
-            override fun onFailure(call: Call<PokemonDetailResponse>, t: Throwable) {
-                Log.v("retrofit", "failed to fetch pokemon detail due to error: ${t.message}")
-                completion(null)
-            }
-        })
+        val response = getResponse({ pokeApi.pokemon(pokeName) }, defaultErrorMessage = "Failed to fetch pokemon detail due to error")
+        completion(response)
     }
 
-    override fun getPokemonList(completion: (response: PokemonListResponse?) -> Unit) {
-        val call: Call<PokemonListResponse> = pokeApi.pokemonList()
-        call.enqueue(object: Callback<PokemonListResponse> {
-            override fun onResponse(
-                call: Call<PokemonListResponse>,
-                response: Response<PokemonListResponse>
-            ) {
-                if (response.isSuccessful) {
-                    completion(response.body()!!)
-                } else {
-                    Log.v("retrofit", "failed to fetch pokemon list due to error ${response.errorBody()}")
-                    completion(null)
-                }
-            }
-
-            override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
-                Log.v("retrofit", "failed to fetch pokemon detail due to error: ${t.message}")
-                completion(null)
-            }
-        })
+    override suspend fun getPokemonList(completion: suspend (response: Result<PokemonListResponse>) -> Unit) {
+        val response = getResponse({pokeApi.pokemonList()}, defaultErrorMessage = "Failed to fetch pokemon list due to error")
+        completion(response)
     }
-    //TODO("Seguir o exemplo do getPokemonDetail, implementando a nova chamada")
+    private suspend fun <T> getResponse(request: suspend () -> Response<T>, defaultErrorMessage: String): Result<T> {
+        return try {
+            println("I'm working in thread ${Thread.currentThread().name}")
+            val result = request.invoke()
+            if (result.isSuccessful) {
+                return Result.success(result.body())
+            } else {
+                val errorResponse = ErrorUtils.parseError(result, retrofit)
+                Result.error(errorResponse?.status_message ?: defaultErrorMessage, errorResponse)
+            }
+        } catch (e: Throwable) {
+            Result.error("Unknown Error", null)
+        }
+    }
+}
 
+/**
+ * parses error response body
+ */
+object ErrorUtils {
+
+    fun parseError(response: Response<*>, retrofit: Retrofit): Error? {
+        val converter = retrofit.responseBodyConverter<Error>(Error::class.java, arrayOfNulls(0))
+        return try {
+            converter.convert(response.errorBody()!!)
+        } catch (e: IOException) {
+            Error()
+        }
+    }
 }
