@@ -8,19 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.mypokedex.databinding.FragmentDetailUiBinding
 import com.example.mypokedex.pokemon.api.PokemonDataSourceImpl
 import com.example.mypokedex.pokemon.data.Pokemon
 import com.example.mypokedex.pokemon.data.PokemonRepositoryImpl
-import org.w3c.dom.Text
+import kotlinx.coroutines.launch
 import java.util.*
+import com.example.mypokedex.pokemon.data.model.Result
 
 class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
     private lateinit var binding: FragmentDetailUiBinding
     val args by navArgs<PokemonDetailFragmentArgs>()
     private var tts: TextToSpeech? = null
+
     val typesToWeaknesses = mapOf(
         "Normal" to listOf("Fighting"),
         "Fighting" to  listOf("Flying", "Psychic", "Fairy"),
@@ -52,48 +55,66 @@ class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon(args.pokemonSpecies) {
-            it?.let {pokemon ->
-                tts = TextToSpeech(this.context,this)
-                var femaleRatio = pokemon.genderRatio / 8
-                var maleRatio = 1 - femaleRatio
-                var formattedFemaleRatio = femaleRatio * 100
-                var formattedMaleRatio = maleRatio * 100
+        lifecycleScope.launch {
 
-                binding.tvPokemonName.text = pokemon.name.capitalize()
-                var pokeBackgroundColor = 0
-                var acceptedColors = listOf<String>("black", "blue", "cyan", "dark gray", "gray", "green", "light gray", "magenta", "red", "transparent", "white", "yellow")
-                    if (!acceptedColors.contains(pokemon.color)) {
-                        pokeBackgroundColor = Color.BLACK
-                    } else {
-                        pokeBackgroundColor = Color.parseColor(pokemon.color)
+            PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon(args.pokemonSpecies) {
+                    it.collect { pokemon ->
+                        when (pokemon.status) {
+                            Result.Status.SUCCESS -> {
+                                pokemon.data?.let {
+                                    tts = TextToSpeech(binding.root.context,this@PokemonDetailFragment)
+                                    var femaleRatio = it.genderRatio / 8
+                                    var maleRatio = 1 - femaleRatio
+                                    var formattedFemaleRatio = femaleRatio * 100
+                                    var formattedMaleRatio = maleRatio * 100
+
+                                    binding.tvPokemonName.text = it.name.capitalize()
+                                    var pokeBackgroundColor = 0
+                                    var acceptedColors = listOf<String>("black", "blue", "cyan", "dark gray", "gray", "green", "light gray", "magenta", "red", "transparent", "white", "yellow")
+                                    if (!acceptedColors.contains(it.color)) {
+                                        pokeBackgroundColor = Color.BLACK
+                                    } else {
+                                        pokeBackgroundColor = Color.parseColor(it.color)
+                                    }
+
+                                    var newColor = Color.HSVToColor(FloatArray(3).apply {
+                                        Color.colorToHSV(pokeBackgroundColor, this)
+                                        this[1] = this[1] * 0.35f
+                                    })
+                                    binding.llImageBackground.setBackgroundColor(newColor)
+                                    val pokeImageUrl = it.imageUrl
+                                    if (pokeImageUrl.isNotEmpty()) {
+                                        Glide.with(this@PokemonDetailFragment).load(it.imageUrl).into(binding.ivPokemonImage)
+                                    }
+
+                                    binding.tvDexQuote.text = it.quote.replace("\n"," ")
+                                    binding.tvSpecies.text = it.species.capitalize()
+                                    binding.tvHeight.text = "${(it.height / 10).toString()} m"
+                                    binding.tvWeight.text = "${(it.weight / 10).toString()} kg"
+                                    binding.tvAbilities.text = it.abilities.map { ability -> ability.capitalize()  }.joinToString(", ")
+                                    binding.tvEggGroup.text = it.eggGroup.map { eggGroup -> eggGroup.capitalize() }.joinToString(", ")
+                                    binding.tvCatchRate.text = it.catchRate.toString()
+                                    binding.tvGender.text = "${formattedFemaleRatio.toString()}%"
+                                    binding.tvGender2.text = "${formattedMaleRatio.toString()}%"
+                                    checkWeaknesses(it)?.let {
+                                        binding.tvWeaknesses.text = it.joinToString(", ")
+                                    }
+                                }
+                            }
+
+                            Result.Status.ERROR -> {
+                                println("Error getting details")
+                            }
+                            Result.Status.LOADING -> {
+                                println("Loading detail...")
+                            }
+                        }
+
                     }
-
-                var newColor = Color.HSVToColor(FloatArray(3).apply {
-                    Color.colorToHSV(pokeBackgroundColor, this)
-                    this[1] = this[1] * 0.35f
-                })
-                binding.llImageBackground.setBackgroundColor(newColor)
-                val pokeImageUrl = pokemon.imageUrl
-                if (pokeImageUrl.isNotEmpty()) {
-                    Glide.with(this).load(pokemon.imageUrl).into(binding.ivPokemonImage)
-                }
-
-                binding.tvDexQuote.text = pokemon.quote.replace("\n"," ")
-                binding.tvSpecies.text = pokemon.species.capitalize()
-                binding.tvHeight.text = "${(pokemon.height / 10).toString()} m"
-                binding.tvWeight.text = "${(pokemon.weight / 10).toString()} kg"
-                binding.tvAbilities.text = pokemon.abilities.map { ability -> ability.capitalize()  }.joinToString(", ")
-                binding.tvEggGroup.text = pokemon.eggGroup.map { eggGroup -> eggGroup.capitalize() }.joinToString(", ")
-                binding.tvCatchRate.text = pokemon.catchRate.toString()
-                binding.tvGender.text = "${formattedFemaleRatio.toString()}%"
-                binding.tvGender2.text = "${formattedMaleRatio.toString()}%"
-                checkWeaknesses(pokemon)?.let {
-                    binding.tvWeaknesses.text = it.joinToString(", ")
                 }
             }
         }
-    }
+
     private fun checkWeaknesses(pokemon: Pokemon): List<String>? {
         val pokeType1 = pokemon.types[0].type.name
         val typeOneWeaknesses = typesToWeaknesses[pokeType1.capitalize()]
