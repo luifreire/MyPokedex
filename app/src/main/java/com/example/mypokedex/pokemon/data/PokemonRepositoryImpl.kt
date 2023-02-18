@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flowOn
 
 
 class PokemonRepositoryImpl constructor(private val api: PokemonDataSource): PokemonRepository {
-    override suspend fun getPokemon(name: String, completion: suspend (pokemon: Flow<Result<Pokemon?>>) -> Unit) {
+    override suspend fun getPokemon(name: String, completion: suspend (pokemon: Flow<Result<Pokemon>?>) -> Unit) {
         val pokeName = name.lowercase()
         completion(flow {
             emit(Result.loading())
