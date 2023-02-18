@@ -8,42 +8,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.mypokedex.databinding.FragmentDetailUiBinding
-import com.example.mypokedex.pokemon.api.PokemonDataSourceImpl
 import com.example.mypokedex.pokemon.data.Pokemon
-import com.example.mypokedex.pokemon.data.PokemonRepositoryImpl
-import kotlinx.coroutines.launch
 import java.util.*
 import com.example.mypokedex.pokemon.data.model.Result
-
+import androidx.lifecycle.Observer
 class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
     private lateinit var binding: FragmentDetailUiBinding
     val args by navArgs<PokemonDetailFragmentArgs>()
+    private val viewModel by viewModels<PokemonDetailViewModel>()
     private var tts: TextToSpeech? = null
-
-    val typesToWeaknesses = mapOf(
-        "Normal" to listOf("Fighting"),
-        "Fighting" to  listOf("Flying", "Psychic", "Fairy"),
-        "Flying" to listOf("Rock", "Electric", "Ice"),
-        "Poison" to listOf("Ground", "Psychic"),
-        "Ground" to  listOf("Water", "Grass", "Ice"),
-        "Rock" to listOf("Fighting", "Ground", "Steel", "Water", "Grass"),
-        "Bug" to listOf("Flying", "Rock", "Fire"),
-        "Ghost" to listOf("Ghost, Dark"),
-        "Steel" to listOf("Fighting", "Ground", "Fire"),
-        "Fire" to listOf("Ground", "Rock", "Water"),
-        "Water" to listOf("Grass", "Electric"),
-        "Grass" to listOf("Flying", "Poison", "Ghost", "Fire", "Ice"),
-        "Electric" to listOf("Ground"),
-        "Psychic" to listOf("Bug", "Ghost", "DarK"),
-        "Ice" to listOf("Fighting", "Rock", "Steel", "Fire"),
-        "Dragon" to listOf("Ice", "Dragon", "Fairy"),
-        "Dark" to listOf("Fighting", "Bug", "Fairy"),
-        "Fairy" to listOf("Poison", "Steel")
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,80 +32,78 @@ class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lifecycleScope.launch {
+        subscribeUI()
+    }
 
-            PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon(args.pokemonSpecies) {
-                    it.collect { pokemon ->
-                        when (pokemon.status) {
-                            Result.Status.SUCCESS -> {
-                                pokemon.data?.let {
-                                    tts = TextToSpeech(binding.root.context,this@PokemonDetailFragment)
-                                    var femaleRatio = it.genderRatio / 8
-                                    var maleRatio = 1 - femaleRatio
-                                    var formattedFemaleRatio = femaleRatio * 100
-                                    var formattedMaleRatio = maleRatio * 100
+    fun subscribeUI() {
+        viewModel.fetchPokemon(args.pokemonSpecies)
+        viewModel.pokemon.observe(this.viewLifecycleOwner, Observer { result ->
+            when (result.status) {
+                Result.Status.SUCCESS -> {
+                    result.data?.let {
+                        tts = TextToSpeech(binding.root.context, this@PokemonDetailFragment)
+                        var femaleRatio = it.genderRatio / 8
+                        var maleRatio = 1 - femaleRatio
+                        var formattedFemaleRatio = femaleRatio * 100
+                        var formattedMaleRatio = maleRatio * 100
 
-                                    binding.tvPokemonName.text = it.name.capitalize()
-                                    var pokeBackgroundColor = 0
-                                    var acceptedColors = listOf<String>("black", "blue", "cyan", "dark gray", "gray", "green", "light gray", "magenta", "red", "transparent", "white", "yellow")
-                                    if (!acceptedColors.contains(it.color)) {
-                                        pokeBackgroundColor = Color.BLACK
-                                    } else {
-                                        pokeBackgroundColor = Color.parseColor(it.color)
-                                    }
-
-                                    var newColor = Color.HSVToColor(FloatArray(3).apply {
-                                        Color.colorToHSV(pokeBackgroundColor, this)
-                                        this[1] = this[1] * 0.35f
-                                    })
-                                    binding.llImageBackground.setBackgroundColor(newColor)
-                                    val pokeImageUrl = it.imageUrl
-                                    if (pokeImageUrl.isNotEmpty()) {
-                                        Glide.with(this@PokemonDetailFragment).load(it.imageUrl).into(binding.ivPokemonImage)
-                                    }
-
-                                    binding.tvDexQuote.text = it.quote.replace("\n"," ")
-                                    binding.tvSpecies.text = it.species.capitalize()
-                                    binding.tvHeight.text = "${(it.height / 10).toString()} m"
-                                    binding.tvWeight.text = "${(it.weight / 10).toString()} kg"
-                                    binding.tvAbilities.text = it.abilities.map { ability -> ability.capitalize()  }.joinToString(", ")
-                                    binding.tvEggGroup.text = it.eggGroup.map { eggGroup -> eggGroup.capitalize() }.joinToString(", ")
-                                    binding.tvCatchRate.text = it.catchRate.toString()
-                                    binding.tvGender.text = "${formattedFemaleRatio.toString()}%"
-                                    binding.tvGender2.text = "${formattedMaleRatio.toString()}%"
-                                    checkWeaknesses(it)?.let {
-                                        binding.tvWeaknesses.text = it.joinToString(", ")
-                                    }
-                                }
-                            }
-
-                            Result.Status.ERROR -> {
-                                println("Error getting details")
-                            }
-                            Result.Status.LOADING -> {
-                                println("Loading detail...")
-                            }
+                        binding.tvPokemonName.text = it.name.capitalize()
+                        var pokeBackgroundColor = 0
+                        var acceptedColors = listOf<String>(
+                            "black",
+                            "blue",
+                            "cyan",
+                            "dark gray",
+                            "gray",
+                            "green",
+                            "light gray",
+                            "magenta",
+                            "red",
+                            "transparent",
+                            "white",
+                            "yellow"
+                        )
+                        if (!acceptedColors.contains(it.color)) {
+                            pokeBackgroundColor = Color.BLACK
+                        } else {
+                            pokeBackgroundColor = Color.parseColor(it.color)
                         }
 
+                        var newColor = Color.HSVToColor(FloatArray(3).apply {
+                            Color.colorToHSV(pokeBackgroundColor, this)
+                            this[1] = this[1] * 0.35f
+                        })
+                        binding.llImageBackground.setBackgroundColor(newColor)
+                        val pokeImageUrl = it.imageUrl
+                        if (pokeImageUrl.isNotEmpty()) {
+                            Glide.with(this@PokemonDetailFragment).load(it.imageUrl)
+                                .into(binding.ivPokemonImage)
+                        }
+
+                        binding.tvDexQuote.text = it.quote.replace("\n", " ")
+                        binding.tvSpecies.text = it.species.capitalize()
+                        binding.tvHeight.text = "${(it.height / 10).toString()} m"
+                        binding.tvWeight.text = "${(it.weight / 10).toString()} kg"
+                        binding.tvAbilities.text =
+                            it.abilities.map { ability -> ability.capitalize() }.joinToString(", ")
+                        binding.tvEggGroup.text =
+                            it.eggGroup.map { eggGroup -> eggGroup.capitalize() }.joinToString(", ")
+                        binding.tvCatchRate.text = it.catchRate.toString()
+                        binding.tvGender.text = "${formattedFemaleRatio.toString()}%"
+                        binding.tvGender2.text = "${formattedMaleRatio.toString()}%"
+                        viewModel.checkWeaknesses(it)?.let {
+                            binding.tvWeaknesses.text = it.joinToString(", ")
+                        }
                     }
                 }
+                Result.Status.ERROR -> {
+                    println("Error getting detail...")
+                }
+                Result.Status.LOADING -> {
+                    println("Loading detail...")
+                }
             }
-        }
-
-    private fun checkWeaknesses(pokemon: Pokemon): List<String>? {
-        val pokeType1 = pokemon.types[0].type.name
-        val typeOneWeaknesses = typesToWeaknesses[pokeType1.capitalize()]
-        if (pokemon.types.size > 1) {
-            val pokeType2 = pokemon.types[1].type.name
-            val typeTwoWeaknesses = typesToWeaknesses[pokeType2.capitalize()]
-            if(typeOneWeaknesses != null && typeTwoWeaknesses != null) {
-                var joinedTypes: List<String> = typeOneWeaknesses.plus(typeTwoWeaknesses)
-                return joinedTypes.mapNotNull { weakness -> if (weakness != pokeType2.capitalize()) weakness else null}
-            } else {
-                return null
-            }
-        }
-        return typeOneWeaknesses
+        })
     }
 
     override fun onInit(p0: Int) {
@@ -139,6 +114,8 @@ class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
             } else {
                tts?.setSpeechRate(0.8f)
                tts?.speak("${binding.tvSpecies.text}", TextToSpeech.QUEUE_FLUSH, null, "")
+                tts?.playSilentUtterance(300, TextToSpeech.QUEUE_ADD, null)
+                tts?.speak("${binding.tvEggGroup.text}", TextToSpeech.QUEUE_ADD, null, "")
                 tts?.playSilentUtterance(600, TextToSpeech.QUEUE_ADD, null)
                 tts?.speak("${binding.tvDexQuote.text}", TextToSpeech.QUEUE_ADD, null, "")
 
