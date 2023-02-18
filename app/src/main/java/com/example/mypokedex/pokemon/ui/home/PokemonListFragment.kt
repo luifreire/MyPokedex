@@ -13,7 +13,7 @@ import com.example.mypokedex.pokemon.data.PokemonRepositoryImpl
 
 class PokemonListFragment: Fragment() {
     private lateinit var binding: FragmentPkmnListBinding
-    private val pokemonClickCallback = { species: String ->
+    private val pokemonClickCallBack = { species: String ->
         val directions = PokemonListFragmentDirections.navigateToPokemonDetail(species)
         findNavController().navigate(directions)
     }
@@ -27,14 +27,13 @@ class PokemonListFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        PokemonRepositoryImpl(PokemonDataSourceImpl()).getListOfPokemons { list ->
-            list?.let {
-                val adapter = PokedexListAdapter(it)
-                adapter.onItemClick = pokemonClickCallback
+        PokemonRepositoryImpl(PokemonDataSourceImpl()).getListOfPokemons {
+            it?.let { it1 ->
+                val adapter = PokedexListAdapter(it1)
+                adapter.onItemClick = pokemonClickCallBack
+                binding.rvPokedexList.layoutManager = LinearLayoutManager(this.context)
                 binding.rvPokedexList.adapter = adapter
-                binding.rvPokedexList.layoutManager = LinearLayoutManager(binding.root.context)
             }
         }
-        super.onViewCreated(view, savedInstanceState)
     }
 }

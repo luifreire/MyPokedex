@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.mypokedex.databinding.FragmentDetailUiBinding
 import com.example.mypokedex.pokemon.api.PokemonDataSourceImpl
+import com.example.mypokedex.pokemon.data.Pokemon
 import com.example.mypokedex.pokemon.data.PokemonRepositoryImpl
 import org.w3c.dom.Text
 import java.util.*
@@ -20,6 +21,26 @@ class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
     private lateinit var binding: FragmentDetailUiBinding
     val args by navArgs<PokemonDetailFragmentArgs>()
     private var tts: TextToSpeech? = null
+    val typesToWeaknesses = mapOf(
+        "Normal" to listOf("Fighting"),
+        "Fighting" to  listOf("Flying", "Psychic", "Fairy"),
+        "Flying" to listOf("Rock", "Electric", "Ice"),
+        "Poison" to listOf("Ground", "Psychic"),
+        "Ground" to  listOf("Water", "Grass", "Ice"),
+        "Rock" to listOf("Fighting", "Ground", "Steel", "Water", "Grass"),
+        "Bug" to listOf("Flying", "Rock", "Fire"),
+        "Ghost" to listOf("Ghost, Dark"),
+        "Steel" to listOf("Fighting", "Ground", "Fire"),
+        "Fire" to listOf("Ground", "Rock", "Water"),
+        "Water" to listOf("Grass", "Electric"),
+        "Grass" to listOf("Flying", "Poison", "Ghost", "Fire", "Ice"),
+        "Electric" to listOf("Ground"),
+        "Psychic" to listOf("Bug", "Ghost", "DarK"),
+        "Ice" to listOf("Fighting", "Rock", "Steel", "Fire"),
+        "Dragon" to listOf("Ice", "Dragon", "Fairy"),
+        "Dark" to listOf("Fighting", "Bug", "Fairy"),
+        "Fairy" to listOf("Poison", "Steel")
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,42 +54,60 @@ class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         PokemonRepositoryImpl(PokemonDataSourceImpl()).getPokemon(args.pokemonSpecies) {
             it?.let {pokemon ->
-                println(pokemon)
+                tts = TextToSpeech(this.context,this)
+                var femaleRatio = pokemon.genderRatio / 8
+                var maleRatio = 1 - femaleRatio
+                var formattedFemaleRatio = femaleRatio * 100
+                var formattedMaleRatio = maleRatio * 100
+
                 binding.tvPokemonName.text = pokemon.name.capitalize()
+                var pokeBackgroundColor = 0
+                var acceptedColors = listOf<String>("black", "blue", "cyan", "dark gray", "gray", "green", "light gray", "magenta", "red", "transparent", "white", "yellow")
+                    if (!acceptedColors.contains(pokemon.color)) {
+                        pokeBackgroundColor = Color.BLACK
+                    } else {
+                        pokeBackgroundColor = Color.parseColor(pokemon.color)
+                    }
+
+                var newColor = Color.HSVToColor(FloatArray(3).apply {
+                    Color.colorToHSV(pokeBackgroundColor, this)
+                    this[1] = this[1] * 0.35f
+                })
+                binding.llImageBackground.setBackgroundColor(newColor)
+                val pokeImageUrl = pokemon.imageUrl
+                if (pokeImageUrl.isNotEmpty()) {
+                    Glide.with(this).load(pokemon.imageUrl).into(binding.ivPokemonImage)
+                }
+
+                binding.tvDexQuote.text = pokemon.quote.replace("\n"," ")
+                binding.tvSpecies.text = pokemon.species.capitalize()
                 binding.tvHeight.text = "${(pokemon.height / 10).toString()} m"
                 binding.tvWeight.text = "${(pokemon.weight / 10).toString()} kg"
                 binding.tvAbilities.text = pokemon.abilities.map { ability -> ability.capitalize()  }.joinToString(", ")
                 binding.tvEggGroup.text = pokemon.eggGroup.map { eggGroup -> eggGroup.capitalize() }.joinToString(", ")
                 binding.tvCatchRate.text = pokemon.catchRate.toString()
-
-                var femaleRatio = pokemon.genderRatio / 8
-                var maleRatio = 1 - femaleRatio
-                var formattedFemaleRatio = femaleRatio * 100
-                var formattedMaleRatio = maleRatio * 100
                 binding.tvGender.text = "${formattedFemaleRatio.toString()}%"
                 binding.tvGender2.text = "${formattedMaleRatio.toString()}%"
-                binding.tvSpecies.text = pokemon.species.capitalize()
-                binding.tvDexQuote.text = pokemon.quote.replace(Regex("\n"), " ")
-                val acceptedColors = listOf( "red", "blue", "green", "black", "white", "gray", "cyan", "magenta", "yellow", "lightgray", "darkgray", "grey", "lightgrey", "darkgrey", "aqua", "fuchsia", "lime", "maroon", "navy", "olive", "purple", "silver","teal")
-                var bgColor: Int = 0
-                if (acceptedColors.contains(pokemon.bgColor)) {
-                    bgColor = Color.parseColor(pokemon.bgColor)
-                } else {
-                    bgColor = Color.parseColor("black")
+                checkWeaknesses(pokemon)?.let {
+                    binding.tvWeaknesses.text = it.joinToString(", ")
                 }
-
-                var newColor = Color.HSVToColor(FloatArray(3).apply {
-                    Color.colorToHSV(bgColor, this)
-                    this[1] *= 0.35f
-//                    this[2] *= 1.1f
-                })
-                binding.llImageBackground.setBackgroundColor(newColor)
-                if (pokemon.imageURL.isNotEmpty()) {
-                    Glide.with(this).load(pokemon.imageURL).into(binding.ivPokemonImage)
-                }
-                tts = TextToSpeech(this.context,this)
             }
         }
+    }
+    private fun checkWeaknesses(pokemon: Pokemon): List<String>? {
+        val pokeType1 = pokemon.types[0].type.name
+        val typeOneWeaknesses = typesToWeaknesses[pokeType1.capitalize()]
+        if (pokemon.types.size > 1) {
+            val pokeType2 = pokemon.types[1].type.name
+            val typeTwoWeaknesses = typesToWeaknesses[pokeType2.capitalize()]
+            if(typeOneWeaknesses != null && typeTwoWeaknesses != null) {
+                var joinedTypes: List<String> = typeOneWeaknesses.plus(typeTwoWeaknesses)
+                return joinedTypes.mapNotNull { weakness -> if (weakness != pokeType2.capitalize()) weakness else null}
+            } else {
+                return null
+            }
+        }
+        return typeOneWeaknesses
     }
 
     override fun onInit(p0: Int) {
