@@ -30,6 +30,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.mypokedex.R
 import com.example.mypokedex.databinding.FragmentCameraBinding
 import com.example.mypokedex.ml.PkmnSimpleModel
+import com.example.mypokedex.ml.PokemonGeneralModel
 import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.model.Model
@@ -87,7 +88,7 @@ class PokedexCameraFragment: Fragment() {
         cameraExecutor = Executors.newSingleThreadExecutor()
         recogViewModel.recognitionList.observe(this.viewLifecycleOwner, Observer {
             Log.d("pokedexRecognitionViewModel", "Collecting items ${it.toString()}")
-            if (it[0].confidence > 0.3) {
+            if (it[0].confidence > 0.1) {
                 val mostLikelyPokemon = it[0].label
                 Log.d("pokedexNavigationSetup", "Requesting Detail Screen with $mostLikelyPokemon")
                 val directions = PokedexCameraFragmentDirections.interpretPokemon(mostLikelyPokemon)
@@ -188,7 +189,7 @@ class PokedexCameraFragment: Fragment() {
 }
 
 private class ImageAnalyzer(ctx: Context, private val listener: (recognition: List<Recognition>) -> Unit): ImageAnalysis.Analyzer {
-    private val pokedexModel: PkmnSimpleModel by lazy {
+    private val pokedexModel: PokemonGeneralModel by lazy {
         val compatList = CompatibilityList()
         val options = if (compatList.isDelegateSupportedOnThisDevice) {
             Log.d("pokedex", "This device is GPU Compatible ")
@@ -197,7 +198,7 @@ private class ImageAnalyzer(ctx: Context, private val listener: (recognition: Li
             Log.d("pokedex", "This device is GPU Incompatible ")
             Model.Options.Builder().setNumThreads(4).build()
         }
-        PkmnSimpleModel.newInstance(ctx, options)
+        PokemonGeneralModel.newInstance(ctx, options)
     }
     override fun analyze(image: ImageProxy) {
         val items = mutableListOf<Recognition>()
