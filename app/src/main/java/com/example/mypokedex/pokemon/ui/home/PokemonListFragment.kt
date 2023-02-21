@@ -1,15 +1,16 @@
 package com.example.mypokedex.pokemon.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mypokedex.R
 import com.example.mypokedex.databinding.FragmentPkmnListBinding
 import com.example.mypokedex.pokemon.api.PokemonDataSourceImpl
 import com.example.mypokedex.pokemon.data.PokemonRepositoryImpl
@@ -36,6 +37,19 @@ class PokemonListFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val toolbar = binding.listToolbar.appToolbar
+        toolbar.inflateMenu(R.menu.pokedex_app_bar)
+        val cameraButton = toolbar.menu.findItem(R.id.open_camera)
+        cameraButton.isVisible = true
+        cameraButton.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.open_camera -> {
+                    findNavController().navigate(PokemonListFragmentDirections.openCameraFromList())
+                    true
+                }
+                else -> false
+            }
+        }
         pokedexAdapter = PokedexListAdapter(list)
         val adapter = pokedexAdapter
         adapter.onItemClick = pokemonClickCallBack

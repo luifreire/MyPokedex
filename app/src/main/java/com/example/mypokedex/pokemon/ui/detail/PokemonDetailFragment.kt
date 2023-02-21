@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -16,6 +18,10 @@ import com.example.mypokedex.pokemon.data.Pokemon
 import java.util.*
 import com.example.mypokedex.pokemon.data.model.Result
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.example.mypokedex.R
+import com.example.mypokedex.pokemon.ui.home.PokemonListFragmentDirections
+
 class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
     private lateinit var binding: FragmentDetailUiBinding
     val args by navArgs<PokemonDetailFragmentArgs>()
@@ -27,12 +33,41 @@ class PokemonDetailFragment: Fragment(), TextToSpeech.OnInitListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(false)
         binding = FragmentDetailUiBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        clearToolbarMenu()
+        val toolbar = binding.detailToolbar.appToolbar
+        toolbar.inflateMenu(R.menu.pokedex_app_bar)
+        val cameraItem = toolbar.menu.findItem(R.id.open_camera)
+        cameraItem.isVisible = true
+        cameraItem.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.open_camera -> {
+                    findNavController().navigate(PokemonDetailFragmentDirections.fromDetailToCamera())
+                    true
+                }
+                else -> false
+            }
+        }
+        toolbar.setNavigationIcon(com.google.android.material.R.drawable.abc_ic_ab_back_material)
+        toolbar.setNavigationOnClickListener { view ->
+            findNavController().navigate(PokemonDetailFragmentDirections.backToList())
+        }
         subscribeUI()
+    }
+
+    private fun clearToolbarMenu() {
+        val toolbar = binding.detailToolbar.appToolbar
+        toolbar.menu.clear()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        tts?.stop()
     }
 
     fun subscribeUI() {

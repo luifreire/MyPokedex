@@ -5,26 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/detail_scrollview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
             android:orientation="vertical">
-
+            <include
+                layout="@layout/app_toolbar"
+                android:id="@+id/detail_toolbar"
+            />
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/materialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="15dp">
+                >
 
                 <LinearLayout
                     android:id="@+id/llImageBackground"
@@ -32,6 +34,7 @@
                     android:layout_height="366dp"
                     android:background="@null"
                     android:orientation="vertical"
+                    android:paddingHorizontal="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -63,253 +66,260 @@
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <Space
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="24dp" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="INFO"
-                android:textColor="@android:color/primary_text_light"
-                android:textStyle="bold" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="24dp" />
-
-            <TextView
-                android:id="@+id/tvDexQuote"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="26dp"
-                android:layout_marginEnd="26dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="@android:color/tertiary_text_light"
-                android:textIsSelectable="true"
-                android:textStyle="italic"
-                android:autoSizeTextType="uniform"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="24dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:paddingHorizontal="20dp"
+                android:orientation="vertical"
+                >
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="29dp"
-                    android:text="Species"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/tertiary_text_light" />
+                    android:text="INFO"
+                    android:textColor="@android:color/primary_text_light"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
 
                 <TextView
-                    android:id="@+id/tvSpecies"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
+                    android:id="@+id/tvDexQuote"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
                     android:text="TextView"
-                    android:textColor="@android:color/primary_text_light" />
+                    android:textAlignment="center"
+                    android:textColor="@android:color/tertiary_text_light"
+                    android:textIsSelectable="true"
+                    android:textStyle="italic"
+                    android:autoSizeTextType="uniform"/>
 
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="29dp"
+                        android:text="Species"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/tertiary_text_light" />
+
+                    <TextView
+                        android:id="@+id/tvSpecies"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="44dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/primary_text_light" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="13dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Egg Group"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/tertiary_text_light" />
+
+                    <TextView
+                        android:id="@+id/tvEggGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="44dp"
+                        android:layout_marginTop="16dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/primary_text_light" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="28dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Abilities"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/tertiary_text_light" />
+
+                    <TextView
+                        android:id="@+id/tvAbilities"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="44dp"
+                        android:layout_marginTop="16dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/primary_text_light" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="37dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Height"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/tertiary_text_light" />
+
+                    <TextView
+                        android:id="@+id/tvHeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="44dp"
+                        android:layout_marginTop="16dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/primary_text_light" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="34dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Weight"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/tertiary_text_light" />
+
+                    <TextView
+                        android:id="@+id/tvWeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="44dp"
+                        android:layout_marginTop="16dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/primary_text_light" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="33dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Gender"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/tertiary_text_light" />
+
+                    <TextView
+                        android:id="@+id/tvGender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="44dp"
+                        android:layout_marginTop="16dp"
+                        android:text="♀ 12.5%"
+                        android:textColor="@android:color/holo_purple" />
+
+                    <TextView
+                        android:id="@+id/tvGender2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:text="⚦ 12.5%"
+                        android:textColor="@android:color/holo_blue_light" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Catch Rate"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/tertiary_text_light" />
+
+                    <TextView
+                        android:id="@+id/tvCatchRate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="44dp"
+                        android:layout_marginTop="16dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/primary_text_light" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Weaknesses"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/tertiary_text_light" />
+
+                    <TextView
+                        android:id="@+id/tvWeaknesses"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="44dp"
+                        android:layout_marginTop="16dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/primary_text_light" />
+
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="13dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Egg Group"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/tertiary_text_light" />
-
-                <TextView
-                    android:id="@+id/tvEggGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
-                    android:textColor="@android:color/primary_text_light" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="28dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Abilities"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/tertiary_text_light" />
-
-                <TextView
-                    android:id="@+id/tvAbilities"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
-                    android:textColor="@android:color/primary_text_light" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="37dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Height"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/tertiary_text_light" />
-
-                <TextView
-                    android:id="@+id/tvHeight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
-                    android:textColor="@android:color/primary_text_light" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="34dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Weight"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/tertiary_text_light" />
-
-                <TextView
-                    android:id="@+id/tvWeight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
-                    android:textColor="@android:color/primary_text_light" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView15"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="33dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Gender"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/tertiary_text_light" />
-
-                <TextView
-                    android:id="@+id/tvGender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="16dp"
-                    android:text="♀ 12.5%"
-                    android:textColor="@android:color/holo_purple" />
-
-                <TextView
-                    android:id="@+id/tvGender2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:text="⚦ 12.5%"
-                    android:textColor="@android:color/holo_blue_light" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView16"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Catch Rate"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/tertiary_text_light" />
-
-                <TextView
-                    android:id="@+id/tvCatchRate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
-                    android:textColor="@android:color/primary_text_light" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView17"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Weaknesses"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/tertiary_text_light" />
-
-                <TextView
-                    android:id="@+id/tvWeaknesses"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
-                    android:textColor="@android:color/primary_text_light" />
-
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

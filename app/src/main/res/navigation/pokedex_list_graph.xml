@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pokedex_list_graph"
-    app:startDestination="@id/camera_analyzer">
+    app:startDestination="@id/pokemon_list">
     <fragment
         android:id="@+id/pokemon_list"
         android:name="com.example.mypokedex.pokemon.ui.home.PokemonListFragment"
@@ -14,7 +14,9 @@
             android:id="@+id/navigate_to_pokemon_detail"
             app:destination="@+id/pokemon_detail"
             />
-
+        <action android:id="@+id/open_camera_from_list"
+            app:destination="@id/camera_analyzer"
+            />
     </fragment>
 
     <fragment
@@ -26,6 +28,15 @@
         <argument
             android:name="pokemon_species"
             app:argType="string"
+            />
+        <action
+            android:id="@+id/back_to_list"
+            app:destination="@id/pokemon_list"
+            />
+
+        <action
+            android:id="@+id/from_detail_to_camera"
+            app:destination="@id/camera_analyzer"
             />
     </fragment>
 

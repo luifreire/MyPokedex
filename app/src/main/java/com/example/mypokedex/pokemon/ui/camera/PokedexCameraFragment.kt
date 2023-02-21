@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.graphics.*
 import android.util.Log
 import android.util.Size
+import android.view.Menu
 import android.widget.Toast
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
@@ -65,8 +66,15 @@ class PokedexCameraFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         binding = FragmentCameraBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        val item = menu.findItem(R.id.open_camera)
+        item.isVisible = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
